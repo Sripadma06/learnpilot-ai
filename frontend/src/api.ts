@@ -1,4 +1,5 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1'
+const rawBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1'
+const API_BASE = rawBase.endsWith('/api/v1') ? rawBase : `${rawBase.replace(/\/+$/, '')}/api/v1`
 
 export type AuthResponse = { token: string; tokenType: string; email: string; role: string }
 export type Me = { id: string; email: string; role: string; createdAt: string }
@@ -20,6 +21,10 @@ function token() {
 async function request<T>(path: string, options: RequestInit = {}, authenticated = true): Promise<T> {
   const headers = new Headers(options.headers)
   if (!(options.body instanceof FormData) && options.body) headers.set('Content-Type', 'application/json')
+  
+  // Bypass ngrok free tier browser warning interstitial
+  headers.set('ngrok-skip-browser-warning', 'true')
+
   const t = token()
   if (authenticated && t) headers.set('Authorization', `Bearer ${t}`)
   let response: Response
