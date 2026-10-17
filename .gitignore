@@ -1,0 +1,27 @@
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+.mvn/
+mvnw
+mvnw.cmd
+
+# Node / Frontend
+**/node_modules/
+**/dist/
+**/.env
+**/.env.local
+npm-debug.log*
+
+# IDE / Editor files
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# OS files
+Thumbs.db
+.DS_Store

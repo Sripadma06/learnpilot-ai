@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: learnpilot-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-learnpilot}
+      POSTGRES_USER: ${POSTGRES_USER:-learnpilot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_local_only}
+    ports:
+      - "5432:5432"
+    volumes:
+      - learnpilot_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-learnpilot} -d ${POSTGRES_DB:-learnpilot}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ml-service:
+    build: ./ml-service
+    container_name: learnpilot-ml
+    ports:
+      - "127.0.0.1:8001:8001"
+
+volumes:
+  learnpilot_pgdata:

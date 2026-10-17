@@ -1,0 +1,35 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: learnpilot-api
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/learnpilot}
+    username: ${POSTGRES_USER:learnpilot}
+    password: ${POSTGRES_PASSWORD:change_me_local_only}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+app:
+  jwt:
+    secret: ${JWT_SECRET:replace_this_with_a_base64_secret_at_least_32_bytes_long}
+    expiration-minutes: 120
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+  llm:
+    # Optional. Without a key, quizzes/tutor use the built-in offline generator.
+    api-key: ${ANTHROPIC_API_KEY:}
+    model: ${ANTHROPIC_MODEL:claude-sonnet-5-5}
+    # Free alternative: create a key at https://aistudio.google.com/apikey
+    gemini-key: ${GEMINI_API_KEY:}
+    gemini-model: ${GEMINI_MODEL:gemini-2.5-flash}
+  ml:
+    base-url: ${ML_SERVICE_URL:http://localhost:8001}
