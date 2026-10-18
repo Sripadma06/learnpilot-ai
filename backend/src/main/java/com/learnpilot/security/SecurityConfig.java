@@ -54,7 +54,7 @@ public class SecurityConfig {
         patterns.add("http://127.0.0.1:*");
         config.setAllowedOriginPatterns(patterns);
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        config.setAllowedHeaders(Arrays.asList("*")); // includes ngrok-skip-browser-warning sent by the frontend
         config.setAllowCredentials(false);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
