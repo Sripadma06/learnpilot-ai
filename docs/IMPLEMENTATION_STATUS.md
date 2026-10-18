@@ -1,5 +1,8 @@
 # Implementation status
 
+This is now a single Spring Boot application: the React UI is bundled in `src/main/resources/static` and served by Spring.
+
+
 ## Working now
 - **Auth**: `POST /api/v1/auth/register` and `/login` (BCrypt + JWT). Unauthenticated calls now return `401 Please sign in to continue.`; the UI opens the sign-in dialog and discards expired tokens.
 - **PDF upload**: `POST /api/v1/documents` validates the PDF signature, extracts text per page with Apache PDFBox, splits it into passages and stores them per user (`study_documents`, `document_chunks`). `GET /documents`, `DELETE /documents/{id}`.

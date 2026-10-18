@@ -17,7 +17,7 @@ services:
       retries: 10
 
   ml-service:
-    build: ./ml-service
+    build: ./optional/ml-service
     container_name: learnpilot-ml
     ports:
       - "127.0.0.1:8001:8001"
