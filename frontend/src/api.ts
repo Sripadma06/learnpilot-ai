@@ -5,7 +5,8 @@
  */
 export function normalizeBase(raw: string | undefined): string {
   let b = (raw || '').trim()
-  if (!b) return 'http://localhost:8080/api/v1'
+  if (!b) return '/api/v1' // same origin: Spring Boot serves this page and the API together
+  if (b.startsWith('/')) { b = b.replace(/\/+$/, ''); return /\/api\/v1$/.test(b) ? b : b + '/api/v1' }
   if (!/^https?:\/\//i.test(b)) b = (/^(localhost|127\.)/i.test(b) ? 'http://' : 'https://') + b.replace(/^\/+/, '')
   b = b.replace(/\/+$/, '')
   if (!/\/api\/v1$/.test(b)) b += '/api/v1'
@@ -34,14 +35,14 @@ async function request<T>(path: string, options: RequestInit = {}, authenticated
   const headers = new Headers(options.headers)
   if (!(options.body instanceof FormData) && options.body) headers.set('Content-Type', 'application/json')
   // ngrok's free tier shows an HTML warning page to browsers unless this header is sent.
-  if (/ngrok/i.test(API_BASE)) headers.set('ngrok-skip-browser-warning', 'true')
+  if (/ngrok/i.test(API_BASE) || /ngrok/i.test(window.location.hostname)) headers.set('ngrok-skip-browser-warning', 'true')
   const t = token()
   if (authenticated && t) headers.set('Authorization', `Bearer ${t}`)
   let response: Response
   try {
     response = await fetch(`${API_BASE}${path}`, { ...options, headers })
   } catch {
-    throw new Error(`Cannot reach the backend at ${API_BASE}. Check that it is running and that CORS_ALLOWED_ORIGINS on the backend includes ${window.location.origin}.`)
+    throw new Error(`Cannot reach the server at ${API_BASE}. Check that the Spring Boot app is running (mvn spring-boot:run).`)
   }
   const raw = await response.text()
   let data: unknown = undefined
